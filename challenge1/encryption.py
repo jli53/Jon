@@ -1,40 +1,44 @@
+import smbpasswd
 pass_john = open('password.lst','r')
-pass_my = open('passlist.txt','w')
+pass_my = open('dumppass.txt','w')
 count = 0
 index = 0
 last = ''
+passwd = ''
+pair = ''
 for line in pass_john:
     index += 1
     if index%10 == 0 and count < 300:
         print 'index is %d\n' % index
-        pair = line.strip()
+        name = line.strip()
         count += 1
         if count<=20:
-            pair = pair+ ' '+line
+            passwd = name 
         if count>20 and count<=75:
-            pair = pair +' '+'Winter14\n'
+            passwd = 'Winter14'
         if count>75 and count<=110:
-            pair = pair +' '+pair+'Acme2016\n'
+            passwd = name+'Acme2016'
         if count>110 and count<=130:
-            pair = pair+' '+pair+'Acme!\n'
+            passwd = name+'Acme!'
         if count>130 and count<=150:
-            pair = pair+' '+pair+':Acme\n'
+            passwd = name+':Acme'
         if count>150 and count<=205:
-            pair = pair+' '+last
+            passwd = last
         if count>205 and count<=250:
-            pair = pair+' '+pair+'Bank!\n'
+            passwd = name+'Bank!'
         if count>250 and count<=270:     
-            pair = pair +' '+pair+'Bank2016\n'
+            passwd = name+'Bank2016\n'
         if count>270 and count<=280:
-            pair = pair +' \n'
+            passwd = '' 
         if count>280 and count<=298:
-            pair = pair+' '+'Password\n'
+            passwd = 'Password'
         if count == 299:
-            pair = pair+' '+'letmeinAcme\n'
+            passwd = 'letmeinAcme'
         if count == 300:
-            pair = pair+' '+'secret:Acme\n'
+            passwd = 'secret:Acme'
+        pair = name + "::" + smbpasswd.lmhash(passwd)+":"+smbpasswd.nthash(passwd)+":::\n" 
         pass_my.write(pair)
-        last = line 
+        last = name 
     elif count >= 300:
         break
 print 'index is %d' % index
